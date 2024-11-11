@@ -1,0 +1,9 @@
+# Dynamically created parameters for calculations. 
+CalculatedParams:
+  initialAngle: 0.7244390486130423
+  initialIsotropicEquivalentEnergy: 3.3129081108960973e+52
+  initialLorentzFactor: 1709.0206962070097
+  initialMass: 7.812544752837884e+31
+  initialSolidAngle: 1.5778882150450597
+  r_NR: 1.3923659017822988e+32
+  t_NR: 83437578.51778474

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\POLYGENCEPROJECT\build\CMakeFiles\bb30e9b1edf4257726b45e8139985ca7\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{24113F61-8FFA-35B7-A6B2-E8E8DF17702B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

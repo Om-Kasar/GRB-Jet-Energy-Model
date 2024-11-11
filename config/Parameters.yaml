@@ -1,0 +1,11 @@
+# Input constant parameters here.
+Params:
+  c: 299792458
+  protonMass: 1.67262192e-27
+  pi: 3.141592653589793
+  t_dec: 1.5e+3
+  densityProportionalityConstant: 1
+  powerLawIndex: 2.3
+  radiusProportionalityConstant: 1.0e+17
+  surroundingMediumDensity: 2.65
+  initialEnergyEmitted: 1.2e+52

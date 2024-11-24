@@ -1,0 +1,10 @@
+^C:\GRB-JET-ENERGY-MODEL\BUILD\CMAKEFILES\027AC2F27FEDDEBA1D14F2445A845AC0\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/GRB-JET-ENERGY-MODEL/src -BC:/GRB-JET-ENERGY-MODEL/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/GRB-JET-ENERGY-MODEL/build/JET_ENERGY_FUNCTIONS.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

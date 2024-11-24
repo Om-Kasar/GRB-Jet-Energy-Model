@@ -1,0 +1,12 @@
+# Dynamically created parameters for calculations. 
+c: 29979245800.0
+initialAngle: 0.7
+initialIsotropicEquivalentEnergy: 6.122448979591837e+50
+initialLorentzFactor: 166.226623003345
+initialMass: 1.0040359684422168e+27
+initialSolidAngle: 1.4775401137225908
+pi: 3.141592653589793
+protonMass: 1.67262192e-24
+r_NR: 2.780388421124589e+30
+sigma: 0.5434782608695653
+t_NR: 117906.49730028852

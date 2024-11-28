@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\GRB-JET-ENERGY-MODEL\src\main.cpp">
+    <ClCompile Include="C:\repos\GRB-Jet-Energy-Model\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\GRB-JET-ENERGY-MODEL\src\CMakeLists.txt" />
+    <CustomBuild Include="C:\repos\GRB-Jet-Energy-Model\src\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{C3BB7BBC-56B5-392A-A201-28389BDEE039}</UniqueIdentifier>
+      <UniqueIdentifier>{2ECA73F1-367E-32B0-B649-F76BD58FDCF7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

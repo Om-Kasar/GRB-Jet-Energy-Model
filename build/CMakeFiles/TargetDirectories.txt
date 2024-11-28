@@ -1,3 +1,3 @@
-C:/GRB-JET-ENERGY-MODEL/build/CMakeFiles/JET_ENERGY_FUNCTIONS.dir
-C:/GRB-JET-ENERGY-MODEL/build/CMakeFiles/ALL_BUILD.dir
-C:/GRB-JET-ENERGY-MODEL/build/CMakeFiles/ZERO_CHECK.dir
+C:/repos/GRB-Jet-Energy-Model/build/CMakeFiles/JET_ENERGY_FUNCTIONS.dir
+C:/repos/GRB-Jet-Energy-Model/build/CMakeFiles/ALL_BUILD.dir
+C:/repos/GRB-Jet-Energy-Model/build/CMakeFiles/ZERO_CHECK.dir

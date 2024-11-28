@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\GRB-JET-ENERGY-MODEL\build\CMakeFiles\027ac2f27feddeba1d14f2445a845ac0\generate.stamp.rule">
+    <CustomBuild Include="C:\repos\GRB-Jet-Energy-Model\build\CMakeFiles\639eaa1d579f73c60562a2bc10f00a12\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{D73EE4F1-9A22-3C2E-A3EC-6A4066559C05}</UniqueIdentifier>
+      <UniqueIdentifier>{BB3B64DF-2358-358E-BFA2-CAF36DDFACD2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

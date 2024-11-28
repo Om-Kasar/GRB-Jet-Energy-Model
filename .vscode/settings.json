@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/GRB-JET-ENERGY-MODEL/src",
+    "cmake.sourceDirectory": "C:\\repos\\GRB-Jet-Energy-Model\\src",
     "files.associations": {
         "algorithm": "cpp",
         "array": "cpp",

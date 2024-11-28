@@ -14,8 +14,9 @@ burstParameters = {**Parameters, **CalculatedParameters}
 burstConfigs = JEF.load_burst_configs(burstParameters)
 
 # Define values for time in seconds (s).
-t_values1 = np.linspace(1.00, burstConfigs.t_NR, 1000).tolist()
-t_values2 = np.linspace(burstConfigs.t_NR, 1.00e+10, 1000).tolist()
+t_values1 = np.linspace(1.00, burstConfigs.t_NR, 500).tolist()
+t_values2 = np.linspace(burstConfigs.t_NR, 1.00e+10, 500).tolist()
+t_values = np.linspace(1.00, 1.00e+10, 500).tolist()
 
 # Plot the values.
 plt.figure(figsize=(10, 6))

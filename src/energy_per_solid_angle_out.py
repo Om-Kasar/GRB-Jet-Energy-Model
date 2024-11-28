@@ -21,11 +21,11 @@ theta_values1_degrees = np.degrees(theta_values1_rad)
 
 # Plot the values.
 plt.figure(figsize=(10, 6))
-plt.loglog(theta_values1_degrees, JEF.ENERGY_PER_SOLID_ANGLE1(t_values1, burstConfigs))
-plt.loglog(theta_values1_degrees, JEF.ENERGY_PER_SOLID_ANGLE2(t_values1, burstConfigs))
+plt.loglog(t_values1, JEF.jet_energy_derivative1(t_values1, burstConfigs))
+plt.loglog(t_values2, JEF.jet_energy_derivative2(t_values1, burstConfigs))
 plt.axvline(x = burstConfigs.t_NR, color = 'red', linestyle = '--', label = "$\theta$ = $\theta_{NR}$")
 plt.xlim(1.00, 1.00e+10)
-plt.ylim(1.00e+47, 1.00e+51)
+# plt.ylim(1.00e+47, 1.00e+51)
 
 plt.xlabel("Time [s]")
 plt.ylabel("Jet Energy Derivative [erg/s]")

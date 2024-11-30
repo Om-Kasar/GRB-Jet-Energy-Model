@@ -11,7 +11,6 @@ namespace py = pybind11;
 const double pi = 3.14159265358979323846;
 const double massOfProton = 1.67262192e-27;
 const double c = 299792458;
-const double smoothing_interval = 0.5;
 
 // **************************************************************************
 
@@ -163,8 +162,9 @@ double overloadedSweptUpMassPerSolidAngle(double t, const burstConfigurations &b
         // Calculate integrand at x & x_next
         double integrand_At_x = overloadedLorentzFactor(x, burstConfigs) * overloadedSweptUpMassDensity(x, burstConfigs) * 
         pow(overloadedRadius(x, burstConfigs), 2) * radiusDerivative(x, burstConfigs);
-        double integrand_At_x_next = overloadedLorentzFactor(x_next, burstConfigs) * overloadedSweptUpMassDensity(x_next, burstConfigs) * 
-        pow(overloadedRadius(x_next, burstConfigs), 2) * radiusDerivative(x_next, burstConfigs);
+        double integrand_At_x_next = overloadedLorentzFactor(x_next, burstConfigs) * 
+        overloadedSweptUpMassDensity(x_next, burstConfigs) * pow(overloadedRadius(x_next, burstConfigs), 2) * 
+        radiusDerivative(x_next, burstConfigs);
 
         // Implement trapezoidal rule.
         integral += 0.5 * (integrand_At_x + integrand_At_x_next) * dx;
@@ -209,73 +209,35 @@ std::vector<double> ejectaMassPerSolidAngle(const std::vector<double> &t_values,
     return results;
 }
 
-// Evaluate the solid angle of the GRB, with respect to time.
-double overloadedSolidAngle(double t, const burstConfigurations &burstConfigs) {
-    return 2 * pi * (1-std::cos(overloadedEjectionAngle(t, burstConfigs)));
-}
-
-// Calculates solid angle with respect to time, using the overloaded version.
-std::vector<double> solidAngle(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
-
-    std::vector<double> results;
-    results.reserve(t_values.size());
-
-    for (double t : t_values) {
-
-        double y;
-        y = overloadedSolidAngle(t, burstConfigs);
-        results.push_back(y);
-
-    }
-    return results;
-}
 // **************************************************************************
 
 // OVERLOADED VERSIONS OF JET ENERGY FUNCTION
 
 // **************************************************************************
 
+// Function of alpha, detailed in the paper.
+double alpha(double t, const burstConfigurations &burstConfigs) {
+    return pow((pow(
+    (overloadedEjectaMassPerSolidAngle(t, burstConfigs) / overloadedSweptUpMassPerSolidAngle(t, burstConfigs)), 0.25)) * 
+    (pow((overloadedLorentzFactor(t, burstConfigs) / burstConfigs.initialLorentzFactor), 0.5)) *
+    (pow((burstConfigs.initialAngle / overloadedEjectionAngle(t, burstConfigs)), 0.5)), 0.5);
+}
+
+// Function of beta, detailed in the paper.
+double beta(double t, const burstConfigurations &burstConfigs) {
+    return 1 / ((pow(burstConfigs.initialLorentzFactor, 0.5)) * (pow((burstConfigs.r_NR / overloadedRadius(t, burstConfigs)), 1) * 
+    pow((burstConfigs.initialEnergyEmitted / (burstConfigs.initialEnergyEmitted + 1.5e+50)), 1) * 
+    (pow((overloadedEjectaMassPerSolidAngle(t, burstConfigs) / overloadedSweptUpMassPerSolidAngle(t, burstConfigs)), 0.25))));
+} 
+
 // Evaluate the derivative of the overloaded jet energy function with respect to time, BEFORE the non-relativistic stage.
 double overloadedJetEnergy1(double t, const burstConfigurations &burstConfigs) {
-
-    // Function of alpha, detailed in the paper.
-    double alpha = 2 + pow((pow(
-        (overloadedEjectaMassPerSolidAngle(t, burstConfigs) / overloadedSweptUpMassPerSolidAngle(t, burstConfigs)), 0.25)) * 
-        (pow((overloadedLorentzFactor(t, burstConfigs) / burstConfigs.initialLorentzFactor), 0.5)) *
-        (pow((burstConfigs.initialAngle / overloadedEjectionAngle(t, burstConfigs)), 0.5)), 0.5);
-    
-   double y = 1.00e+45 + (burstConfigs.initialEnergyEmitted - 1.00e+45) * pow(1 + pow(t / burstConfigs.t_dec, alpha), -0.8);
-   return y;
-
+   return 1.00e+45 + (burstConfigs.initialEnergyEmitted - 1.00e+45) * (1 / (t * (1 + pow(t / burstConfigs.t_dec, alpha(t, burstConfigs)))));
 }
 
 double overloadedJetEnergy2(double t, const burstConfigurations &burstConfigs) {
-
-    // Function of beta, detailed in the paper.
-    double beta = 1 / ((pow(burstConfigs.initialLorentzFactor, 0.5)) * (pow((burstConfigs.r_NR / overloadedRadius(t, burstConfigs)), 0.8) * 
-        pow((burstConfigs.initialEnergyEmitted / (burstConfigs.initialEnergyEmitted + 1.5e+50)), 0.8) * 
-        (pow((overloadedEjectaMassPerSolidAngle(t, burstConfigs) / overloadedSweptUpMassPerSolidAngle(t, burstConfigs)), 0.25))));
-
-    return overloadedJetEnergy1(burstConfigs.t_NR, burstConfigs) * std::exp(-1 * beta * (t - burstConfigs.t_NR));
-
-}
-
-// **************************************************************************
-
-// OVERLOADED DERIVATIVES OF JET ENERGY FUNCTIONS
-
-// **************************************************************************
-
-double overloadedJetEnergyDerivative1(double t, const burstConfigurations &burstConfigs) { 
-    double stepSize = 1e-5;
-    return (overloadedJetEnergy1(t + stepSize, burstConfigs) - overloadedJetEnergy1(t - stepSize, burstConfigs)) / (2 * stepSize);
-}
-
-// Evaluate the derivative of the overloaded jet energy function with respect to time, AFTER the non-relativistic stage.
-double overloadedJetEnergyDerivative2(double t, const burstConfigurations &burstConfigs) {
-    double stepSize = 1e-5;
-    return (overloadedJetEnergy2(t + stepSize, burstConfigs) - overloadedJetEnergy2(t - stepSize, burstConfigs)) / (2 * stepSize);
-}
+    return overloadedJetEnergy1(burstConfigs.t_NR, burstConfigs) * std::exp(-1 * beta(t, burstConfigs) * (t - burstConfigs.t_NR));
+} 
 
 // **************************************************************************
 
@@ -291,7 +253,7 @@ std::vector<double> jetEnergy1(const std::vector<double> &t_values, const burstC
     for (double t : t_values) {
 
         double y;
-        y = overloadedJetEnergy1(t, burstConfigs);
+        y = (overloadedJetEnergy1(t, burstConfigs));
         results.push_back(y);
 
     }
@@ -306,7 +268,7 @@ std::vector<double> jetEnergy2(const std::vector<double> &t_values, const burstC
     for (double t : t_values) {
 
         double y;
-        y = overloadedJetEnergy2(t, burstConfigs);
+        y = (overloadedJetEnergy2(t, burstConfigs));
         results.push_back(y);
 
     }
@@ -317,32 +279,24 @@ std::vector<double> jetEnergy2(const std::vector<double> &t_values, const burstC
 
 // ENERGY PER SOLID ANGLE TESTS
 
-// *************************************************************************
+// **************************************************************************
 
-// Evaluate the derivative of ejection angle to comply with chain rule for differentiation.
-double overloadedEjectionAngleDerivative(double t, const burstConfigurations &burstConfigs) {
-    double stepSize = 1e-5;
-    return (overloadedEjectionAngle(t + stepSize, burstConfigs) - overloadedEjectionAngle(t + stepSize, burstConfigs)) / (2 * stepSize);
-}
-
-// Evaluate solid angle derivative.
-double overloadedSolidAngleDerivative(double t, const burstConfigurations &burstConfigs) {
-    return 2 * pi * std::sin(overloadedEjectionAngle(t, burstConfigs)) * overloadedEjectionAngleDerivative(t, burstConfigs);
-}
-
+// Calculate overloaded version of Energy Per Solid Angle functions
 double overloadedEnergyPerSolidAngle1(double t, const burstConfigurations &burstConfigs) {
-    return overloadedJetEnergyDerivative1(t, burstConfigs) * (1 / overloadedSolidAngleDerivative(t, burstConfigs));
+   return burstConfigs.initialEnergyEmitted;
 }
 
 double overloadedEnergyPerSolidAngle2(double t, const burstConfigurations &burstConfigs) {
-    return overloadedJetEnergyDerivative2(t, burstConfigs) * (1 / overloadedSolidAngleDerivative(t, burstConfigs));
-}
+    return (overloadedEnergyPerSolidAngle1(burstConfigs.t_NR, burstConfigs) * std::exp(-beta(t, burstConfigs) * pow((t - burstConfigs.t_NR), 1.3))) *
+    (1 + pow((t - burstConfigs.t_NR) / burstConfigs.t_dec, pow(alpha(t, burstConfigs), 5)));
+} 
 
 // **************************************************************************
 
-// SECOND MAIN FUNCTION OF THE PAPER: ENERGY PER SOLID ANGLE WITH RESPECT TO TIME (s).
+// SECOND MAIN FUNCTIONS OF THE PAPER: ENERGY PER SOLID ANGLE WITH RESPECT TO TIME (s).
 
 // ************************************************************************** 
+
 std::vector<double> energyPerSolidAngle1(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
 
     std::vector<double> results;
@@ -351,7 +305,7 @@ std::vector<double> energyPerSolidAngle1(const std::vector<double> &t_values, co
     for (double t : t_values) {
 
         double y;
-        y = overloadedEnergyPerSolidAngle1(t, burstConfigs) + burstConfigs.initialEnergyEmitted;
+        y = overloadedEnergyPerSolidAngle1(t, burstConfigs);
         results.push_back(y);
 
     }
@@ -373,40 +327,36 @@ std::vector<double> energyPerSolidAngle2(const std::vector<double> &t_values, co
     return results;
 }
 
-// JET ENERGY DERIVATIVES FOR DATA VISUALIZATION IF NEEDED
-std::vector<double> jetEnergyDerivative1(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+// **************************************************************************
+
+// EXTERNAL MODELS
+
+// **************************************************************************
+
+std::vector<double> gaussianModel1(const std::vector<double> &theta_values) {
 
     std::vector<double> results;
-    results.reserve(t_values.size());
+    results.reserve(theta_values.size());
+    double thetaC = 3;
 
-    for (double t : t_values) {
+    for (double theta : theta_values) {
 
         double y;
-        y = overloadedJetEnergyDerivative1(t, burstConfigs) + burstConfigs.initialEnergyEmitted;
+        y = (1e+53 / (4 * pi)) * std::exp((-1 * pow((theta / thetaC), 2) / 2));
         results.push_back(y);
 
     }
     return results;
 }
-
-std::vector<double> jetEnergyDerivative2(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
-
-    std::vector<double> results;
-    results.reserve(t_values.size());
-
-    for (double t : t_values) {
-
-        double y;
-        y = overloadedJetEnergyDerivative2(burstConfigs.t_NR, burstConfigs) + overloadedJetEnergyDerivative2(t, burstConfigs);
-        results.push_back(y);
-
-    }
-    return results;
-}
-
 
 // INDIVIDUAL RATIO TESTS FOR GENERAL JET ENERGY ANALYSIS AND TROUBLESHOOTING.
 // ****************************************************************************
+
+
+// DEBUG:
+// - JET ENERGY FUNCTION ** DONE ** 
+// - ENERGY PER SOLID ANGLE FUNCTION
+// - RADIUS RATIO ** DONE ** 
 
 // Package the functions into the JET_ENERGY_FUNCTIONS module.
 PYBIND11_MODULE(JET_ENERGY_FUNCTIONS, m) {
@@ -436,18 +386,12 @@ PYBIND11_MODULE(JET_ENERGY_FUNCTIONS, m) {
     m.def("ejection_angle", &ejectionAngle, "A function that finds the approximate ejection angle of the GRB in radians.");
     m.def("mass_per_solid_angle", &sweptUpMassPerSolidAngle, "A function that calculates the mass swept up per solid angle over the GRB's lifespan.");
     m.def("ejecta_mass_per_solid_angle", &ejectaMassPerSolidAngle, "A function that calculates the total ejecta mass of the GRB with respect to time, in seconds (s).");
+
     m.def("JET_ENERGY1", &jetEnergy1, "A function that represents the approximate energy of a GRB jet before t = t_NR.");
     m.def("JET_ENERGY2", &jetEnergy2, "A function that represents the approximate energy of a GRB jet after t = t_NR.");
-    m.def("solid_angle", &solidAngle, "A function of solid angle, with respect to time in seconds (s).");
-    m.def("ENERGY_PER_SOLID_ANGLE1", &energyPerSolidAngle1, "A function of energy per solid angle, with respect to time, in seconds (s). Used for energy per solid angle analysis.");
-    m.def("ENERGY_PER_SOLID_ANGLE2", &energyPerSolidAngle2, "A function of energy per solid angle, with respect to time, in seconds (s). Used for energy per solid angle analysis.");
 
-    //m.def("mass_ratio", &massRatio);
-    //m.def("lorentz_factor_ratio", &lorentzFactorRatio);
-    //m.def("ejection_angle_ratio", &ejectionAngleRatio);
-    //m.def("radius_ratio", &radialRatio);
-    //m.def("energy_ratio", &energyRatio);
+    m.def("ENERGY_PER_SOLID_ANGLE1", &energyPerSolidAngle1, "A function that represents the approximate energy of a GRB jet before t = t_NR.");
+    m.def("ENERGY_PER_SOLID_ANGLE2", &energyPerSolidAngle2, "A function that represents the approximate energy of a GRB jet after t = t_NR.");
 
-    m.def("jet_energy_derivative1", &jetEnergyDerivative1);
-    m.def("jet_energy_derivative2", &jetEnergyDerivative2);
+    m.def("gaussian_model", &gaussianModel1);
 }

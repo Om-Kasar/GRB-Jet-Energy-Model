@@ -10,23 +10,23 @@ with open("C:/GRB-JET-ENERGY-MODEL/config/CalculatedParameters.yaml") as file: #
     CalculatedParameters = yaml.safe_load(file)
 
 # Defines "burstConfigs" as all of the parameters from the .yaml files which contain all of the burst configuration values.
-burstParameters = {**Parameters, **CalculatedParameters}
-burstConfigs = JEF.load_burst_configs(burstParameters)
+burstParameterValues = {**Parameters, **CalculatedParameters}
+burstConfigs = JEF.load_burst_configs(burstParameterValues)
 
 # Define values for time in seconds (s).
 t_values1 = np.linspace(1.00, burstConfigs.t_NR, 500).tolist()
-t_values2 = np.linspace(burstConfigs.t_NR, 1.00e+10, 500).tolist()
-t_values = np.linspace(1.00, 1.00e+10, 500).tolist()
+t_values2 = np.linspace(burstConfigs.t_NR, 1.00e+11, 500).tolist()
 
 # Plot the values.
 plt.figure(figsize=(10, 6))
 plt.loglog(t_values1, JEF.JET_ENERGY1(t_values1, burstConfigs), color = 'blue')
 plt.loglog(t_values2, JEF.JET_ENERGY2(t_values2, burstConfigs), color = 'blue')
 plt.axvline(x = burstConfigs.t_NR, color = 'red', linestyle = '--', label = "$t = t_{NR}$")
-plt.ylim(1.00e+43, 1.00e+51)
+plt.xlim(1.00, 1.00e+11)
+plt.ylim(1.00e+43, burstConfigs.initialEnergyEmitted)
 
 plt.xlabel("Time [s]")
-plt.ylabel("Energy [erg]")
+plt.ylabel(r"$dE/dt$ [erg/s]")
 plt.grid(True)
 plt.legend()
 plt.show()

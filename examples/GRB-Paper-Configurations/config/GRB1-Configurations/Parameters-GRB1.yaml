@@ -1,0 +1,7 @@
+# Input constant parameters here.
+t_dec: 10 # Approximate deceleration time of burst.
+densityProportionalityConstant: 1.00e+5 # Used for power law model.
+powerLawIndex: 2.2 # Power law index constant that dictates how quickly the density falls off .
+radiusProportionalityConstant: 1.00e+16 # Used for radius function.
+surroundingMediumDensity: 1.00e-2 # Number density of surrounding medium, in cm^-3.
+initialEnergyEmitted: 5.00e+51 # Initial energy emitted in erg.

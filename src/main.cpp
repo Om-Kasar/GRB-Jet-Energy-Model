@@ -287,7 +287,8 @@ double overloadedEnergyPerSolidAngle1(double t, const burstConfigurations &burst
 }
 
 double overloadedEnergyPerSolidAngle2(double t, const burstConfigurations &burstConfigs) {
-    return (overloadedEnergyPerSolidAngle1(burstConfigs.t_NR, burstConfigs) * std::exp(-beta(t, burstConfigs) * pow((t - burstConfigs.t_NR), 1.3))) *
+    return (overloadedEnergyPerSolidAngle1(burstConfigs.t_NR, burstConfigs) * std::exp(-beta(t, burstConfigs) * 
+    pow((t - burstConfigs.t_NR), 1))) *
     (1 + pow((t - burstConfigs.t_NR) / burstConfigs.t_dec, pow(alpha(t, burstConfigs), 5)));
 } 
 
@@ -329,34 +330,122 @@ std::vector<double> energyPerSolidAngle2(const std::vector<double> &t_values, co
 
 // **************************************************************************
 
-// EXTERNAL MODELS
+// COMPARATIVE EXTERNAL MODELS
 
 // **************************************************************************
 
-std::vector<double> gaussianModel1(const std::vector<double> &theta_values) {
+std::vector<double> gaussianModel(const std::vector<double> &theta_values, const burstConfigurations &burstConfigs, double thetaC) {
 
     std::vector<double> results;
     results.reserve(theta_values.size());
-    double thetaC = 3;
 
     for (double theta : theta_values) {
 
         double y;
-        y = (1e+53 / (4 * pi)) * std::exp((-1 * pow((theta / thetaC), 2) / 2));
+        y = burstConfigs.initialEnergyEmitted * std::exp((-1 * pow((theta / thetaC), 2) / 2));
         results.push_back(y);
 
     }
     return results;
 }
 
+std::vector<double> collapsarModel(const std::vector<double> &theta_values, const burstConfigurations &burstConfigs, double collapsarRadius) {
+
+    std::vector<double> results;
+    results.reserve(theta_values.size());
+    double L = 1.5e+50;
+
+    for (double theta : theta_values) {
+
+        double y;
+        y = (2 * std::sqrt(3) * L * collapsarRadius) / (pi * c * theta);
+        results.push_back(y);
+
+    }
+    return results;
+}
+
+// **************************************************************************
+
 // INDIVIDUAL RATIO TESTS FOR GENERAL JET ENERGY ANALYSIS AND TROUBLESHOOTING.
-// ****************************************************************************
+
+// **************************************************************************
+
+std::vector<double> massAccumulationRatio(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+
+    std::vector<double> results;
+    results.reserve(t_values.size());
+
+    for (double t : t_values) {
+
+        double y;
+        y = overloadedEjectaMassPerSolidAngle(t, burstConfigs) / overloadedSweptUpMassPerSolidAngle(t, burstConfigs);
+        results.push_back(y);
+
+    }
+    return results;
+}
 
 
-// DEBUG:
-// - JET ENERGY FUNCTION ** DONE ** 
-// - ENERGY PER SOLID ANGLE FUNCTION
-// - RADIUS RATIO ** DONE ** 
+std::vector<double> lorentzFactorRatio(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+
+    std::vector<double> results;
+    results.reserve(t_values.size());
+
+    for (double t : t_values) {
+
+        double y;
+        y = overloadedLorentzFactor(t, burstConfigs) / burstConfigs.initialLorentzFactor;
+        results.push_back(y);
+
+    }
+    return results;
+}
+
+std::vector<double> ejectionAngleRatio(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+
+    std::vector<double> results;
+    results.reserve(t_values.size());
+
+    for (double t : t_values) {
+
+        double y;
+        y = burstConfigs.initialAngle / overloadedEjectionAngle(t, burstConfigs);
+        results.push_back(y);
+
+    }
+    return results;
+}
+
+std::vector<double> radialRatio(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+
+    std::vector<double> results;
+    results.reserve(t_values.size());
+
+    for (double t : t_values) {
+
+        double y;
+        y = overloadedRadius(burstConfigs.t_NR, burstConfigs) / overloadedRadius(t, burstConfigs);
+        results.push_back(y);
+
+    }
+    return results;
+}
+
+std::vector<double> energyRatio(const std::vector<double> &t_values, const burstConfigurations &burstConfigs) {
+
+    std::vector<double> results;
+    results.reserve(t_values.size());
+
+    for (double t : t_values) {
+
+        double y;
+        y = burstConfigs.initialEnergyEmitted / (1.50e+50 + burstConfigs.initialEnergyEmitted);
+        results.push_back(y);
+
+    }
+    return results;
+}
 
 // Package the functions into the JET_ENERGY_FUNCTIONS module.
 PYBIND11_MODULE(JET_ENERGY_FUNCTIONS, m) {
@@ -377,9 +466,9 @@ PYBIND11_MODULE(JET_ENERGY_FUNCTIONS, m) {
         .def_readwrite("powerLawIndex", &burstConfigurations::powerLawIndex)
         .def_readwrite("radiusProportionalityConstant", &burstConfigurations::radiusProportionalityConstant)
         .def_readwrite("surroundingMediumDensity", &burstConfigurations::surroundingMediumDensity)
-        .def_readwrite("alpha", &burstConfigurations::sigma);
+        .def_readwrite("sigma", &burstConfigurations::sigma);
 
-    // Create the functions using pybind11.
+    // Create and compile the functions using pybind11. 
     m.def("load_burst_configs", &loadBurstConfigs, "Loads the GRB configurations from the .yaml files.");
     m.def("radius", &radius, "A function of radius from the central engine of the GRB in centimeters (cm).");
     m.def("lorentz_factor", &lorentzFactor, "A function that finds the approximate Lorentz factor of a GRB.");
@@ -387,11 +476,22 @@ PYBIND11_MODULE(JET_ENERGY_FUNCTIONS, m) {
     m.def("mass_per_solid_angle", &sweptUpMassPerSolidAngle, "A function that calculates the mass swept up per solid angle over the GRB's lifespan.");
     m.def("ejecta_mass_per_solid_angle", &ejectaMassPerSolidAngle, "A function that calculates the total ejecta mass of the GRB with respect to time, in seconds (s).");
 
+    // Jet Energy Emission Function Compilation
     m.def("JET_ENERGY1", &jetEnergy1, "A function that represents the approximate energy of a GRB jet before t = t_NR.");
     m.def("JET_ENERGY2", &jetEnergy2, "A function that represents the approximate energy of a GRB jet after t = t_NR.");
 
+    // Energy Per Solid Angle Function Compilation
     m.def("ENERGY_PER_SOLID_ANGLE1", &energyPerSolidAngle1, "A function that represents the approximate energy of a GRB jet before t = t_NR.");
     m.def("ENERGY_PER_SOLID_ANGLE2", &energyPerSolidAngle2, "A function that represents the approximate energy of a GRB jet after t = t_NR.");
 
-    m.def("gaussian_model", &gaussianModel1);
+    // Individual Ratio Compilation
+    m.def("accumulated_mass_ratio", &massAccumulationRatio);
+    m.def("lorentz_factor_ratio", &lorentzFactorRatio);
+    m.def("ejection_angle_ratio", &ejectionAngleRatio);
+    m.def("radial_ratio", &radialRatio);
+    m.def("energy_ratio", &energyRatio);
+
+    // Comparative Energy Per Solid Angle Models
+    m.def("gaussian_model", &gaussianModel);
+    m.def("collapsar_model", &collapsarModel);
 }

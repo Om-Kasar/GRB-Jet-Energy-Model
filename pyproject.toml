@@ -1,0 +1,18 @@
+[build-system]
+requires = ["numpy", "pyyaml", "matplotlib", "wheel", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jet_energy_functions"
+version = "0.1.0"
+authors = [
+    { name = "Om Kasar", email = "contact.omkasar@gmail.com" }
+]
+description = "A library used in order to analyze the GRB jet energy levels over a given time interval through a numeric simulation."
+readme = "README.md"
+requires-python = ">=3.10.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]

@@ -5,7 +5,7 @@ import yaml
 c = 2.99792458e+10 # Speed of light, in cm/s.
 protonMass = 1.67262192e-24 # Mass of a proton, in g.
 
-with open("C:/GRB-JET-ENERGY-MODEL/config/Parameters.yaml", "r") as file: # Put your path to the Parameters.yaml file.
+with open("C:/repos/GRB-Jet-Energy-Model/config/Parameters.yaml", "r") as file: # Put your path to the Parameters.yaml file.
     config = yaml.safe_load(file)
 
 t_dec = float(config["t_dec"])
@@ -14,7 +14,6 @@ power_Law_Index = float(config["powerLawIndex"])
 radius_Proportionality_Constant = float(config["radiusProportionalityConstant"])
 surrounding_Medium_Density = float(config["surroundingMediumDensity"])
 initial_Energy_Emitted = float(config["initialEnergyEmitted"])
-energy_Scalar = float(config["energyScalar"])
 pi = math.pi
 
 # Days to Seconds function, for t_NR
@@ -55,8 +54,7 @@ New_Parameters = {
     "c": c
 }
 
-
-with open("C:/GRB-JET-ENERGY-MODEL/config/CalculatedParameters.yaml", "w") as file1:
+with open("C:/repos/GRB-Jet-Energy-Model/config/CalculatedParameters.yaml", "w") as file1:
 
     file1.write("# Dynamically created parameters for calculations. \n")
 

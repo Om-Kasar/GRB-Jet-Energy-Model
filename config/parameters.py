@@ -1,3 +1,5 @@
+# RUN THE FOLLOWING FILE AFTER EDITING THE "Parameters.yaml" FILE IN THE DIRECTORY.
+
 import numpy as np
 import math
 import yaml
@@ -29,16 +31,17 @@ def RadiansToDegrees(radianMeasure):
 
 # Calculate Parameters
 # ************************
-initialAngle = 0.7 # 0.075 Initial Angle of GRB, in radians. Input degree/radian value for Initial Angle, use the DegreesToRadians function if needed.
-initialIsotropicEquivalentEnergy = (2 * initial_Energy_Emitted) / (initialAngle ** 2) # Calculates the initial Isotropic Equivalent Energy of the GRB.
-initialLorentzFactor = (initialIsotropicEquivalentEnergy / (4 * pi * protonMass * surrounding_Medium_Density *  (c ** 5) * (t_dec**3)))**(1/8) # Calculates initial Lorentz Factor.
-initialMass = initial_Energy_Emitted / (initialLorentzFactor * c**2) # Calculates initial mass of the GRB, in grams.
-initialSolidAngle = 2 * pi * (1 - math.cos(initialAngle)) # Calculates initial Solid Angle, in ster.
-t_NR = DaysToSeconds((1100 * (initialIsotropicEquivalentEnergy / (1.00e+53 * surrounding_Medium_Density))) ** (1/3)) # Calculates t_NR, the time it takes for the GRB to become non-relativistic.
-r_NR = radius_Proportionality_Constant * (t_NR ** 2/5) # Calculates the radius from the central engine at which the GRB becomes non-relativistic [r_NR = r(t_NR)].
-sigma = 5 / t_dec # Calculates level of approximation of the hyperbolic tangent approximation of the phase transition model for the lorentz factor..
 
-# Update values to the new CalculatedParameters.yaml file.
+initialAngle = float(input("Give the initial ejection angle of the GRB, in radians: ")) # Initial Angle of GRB, in radians. Input degree/radian value for Initial Angle, use the DegreesToRadians function if needed.
+initialIsotropicEquivalentEnergy = (2 * initial_Energy_Emitted) / (initialAngle ** 2)
+initialLorentzFactor = (initialIsotropicEquivalentEnergy / (4 * pi * protonMass * surrounding_Medium_Density *  (c ** 5) * (t_dec**3)))**(1/8)
+initialMass = initial_Energy_Emitted / (initialLorentzFactor * c**2)
+initialSolidAngle = 2 * pi * (1 - math.cos(initialAngle))
+t_NR = DaysToSeconds((1100 * (initialIsotropicEquivalentEnergy / (1.00e+53 * surrounding_Medium_Density))) ** (1/3))
+r_NR = radius_Proportionality_Constant * (t_NR ** 2/5)
+sigma = 5 / t_dec # Smoothing Factor
+
+# Update values to the dynamically created CalculatedParameters.yaml file.
 
 New_Parameters = {
     "initialAngle": initialAngle,

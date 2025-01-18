@@ -1,3 +1,0 @@
-C:/repos/GRB-Jet-Energy-Model/examples/GRB-Paper-Configurations/build/CMakeFiles/JET_ENERGY_FUNCTIONS.dir
-C:/repos/GRB-Jet-Energy-Model/examples/GRB-Paper-Configurations/build/CMakeFiles/ALL_BUILD.dir
-C:/repos/GRB-Jet-Energy-Model/examples/GRB-Paper-Configurations/build/CMakeFiles/ZERO_CHECK.dir

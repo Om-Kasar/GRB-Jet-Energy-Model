@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # Example usage with user-defined star mass
 star_mass_input = 1.00e+9  # Change this depending on where the collapsar model (green line) goes in the graph's execution.
 
-# Load GRB2 configurations (modify paths as needed)
+# Load GRB configurations (modify paths as needed)
 burstConfigs = jef.load_burst_configs(
     parameters_path="C:/repos/GRB-Jet-Energy-Model/config/Parameters.yaml", # Path to the "Parameters.yaml" file located in this directory.
     calculated_parameters_path="C:/repos/GRB-Jet-Energy-Model/config/CalculatedParameters.yaml" # Path to the "CalculatedParameters.yaml" file located in this directory.

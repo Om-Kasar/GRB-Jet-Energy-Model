@@ -1,8 +1,7 @@
 import jet_energy_functions as jef
 import matplotlib.pyplot as plt
 
-# Example usage with user-defined star mass
-star_mass_input = 1.00e+9  # Change this depending on where the collapsar model (green line) goes in the graph's execution.
+star_mass_input = 1.00e+9  # Collapsar Model
 
 # Load GRB2 configurations (modify paths as needed)
 burstConfigs1 = jef.load_burst_configs(

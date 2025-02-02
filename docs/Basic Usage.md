@@ -41,6 +41,6 @@ burstConfigs = jef.load_burst_configs(
 ```
 
 5. Finally, run the program to get an approximated graph of the numerical simulation. This should yield an image looking like this:
-![image](C:/GRB paper images/jetenergymodel2.png)
+![alt text](images/jetenergymodel2.png)
 
 **NOTE:** Always make sure to edit each files' paths according to your environment in order to make the simulation work.

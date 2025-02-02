@@ -70,5 +70,5 @@ ax2.legend()
 
 5. Finally, run the program. Images like this should be outputted for both figures:
 
-![image](C:/GRB paper images/Figure_3.png)
-![image](C:/GRB paper images/Figure_4.png)
+![alt text](images/Figure_3.png)
+![alt text](images/Figure_4.png)

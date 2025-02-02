@@ -1,7 +1,13 @@
-import jet_energy_functions as jef
-import matplotlib.pyplot as plt
+## Other Usages
 
-star_mass_input = 1.00e+9  # For Collapsar Model
+In order to display multiple graphs (similar to that of the referenced research paper), you need to create however many configuration folders needed for comparisons. Refer to the research paper example folder if needed.
+
+1. Make seperate config folder containing files for each GRB being compared. Utilize a "parameters.py" file in order to make the "CalculatedParameters.py" file for each GRB being analyzed. Take a look at example 2 if needed.
+
+2. After creating each GRB's configurations in their respective folders, create multiple instances of the "burstConfigs" for each GRB, using the C++ system's "jef.load_burst_configs()" function.
+
+```python
+import jet_energy_functions as jef
 
 # Load GRB configurations for each GRB (modify paths as needed)
 burstConfigs1 = jef.load_burst_configs(
@@ -18,7 +24,11 @@ burstConfigs3 = jef.load_burst_configs(
     parameters_path="C:\\repos\\GRB-Jet-Energy-Model\\examples\\GRB-Paper-Configurations\\config\\GRB3-Configurations\\Parameters-GRB3.yaml",
     calculated_parameters_path="C:\\repos\\GRB-Jet-Energy-Model\\examples\\GRB-Paper-Configurations\\config\\GRB3-Configurations\\CalculatedParameters-GRB3.yaml"
 )
+```
 
+3. Create a figure to analyze the distribution of jet energy using matplotlib, and plot it accordingly.
+
+```python
 # Create a figure for Jet Energy plot
 fig1, ax1 = plt.subplots(figsize=(6, 7))
 
@@ -31,6 +41,12 @@ jet_energy_calculator1.plot(ax1, color='red', label=1)
 jet_energy_calculator2.plot(ax1, color='blue', label=2)
 jet_energy_calculator3.plot(ax1, color='orange', label=3)
 
+# Feel free to edit the graph's configurations as needed.
+```
+
+4. Create a seperate figure that analyzes the energy per solid angle of the GRB. Make edits to the graph's x and y-axis accordingly.
+
+```python
 # Create a figure for Energy per Solid Angle plot
 fig2, ax2 = plt.subplots(figsize=(7, 5))
 
@@ -50,22 +66,9 @@ ax2.set_xlabel(r"$\Delta \theta$ from jet axis [deg]")
 ax2.set_ylabel(r"$dE/d\Omega(\theta)$ or $\epsilon(t)$ [erg/ster]")
 ax2.grid(True)
 ax2.legend()
+```
 
-# Create a figure for Energy per Solid Angle and Comparison Models plot
-fig3, ax3 = plt.subplots(figsize=(7, 5))
+5. Finally, run the program. Images like this should be outputted for both figures:
 
-model_plotter = jef.model_plotter(burstConfigs2)
-energy_calculator2.plot(ax3, color='blue', label=2)
-model_plotter.plot_comparison_models(star_mass=star_mass_input, ax=ax3)
-
-# Formatting the plot for Energy per Solid Angle and Comparison Models
-ax3.set_xlim(1.00e-1, 1.00e+4)
-ax3.set_ylim(1.00e+40, 1.00e+54)
-ax3.set_title('Energy per Solid Angle and Comparative Models')
-ax3.set_xlabel(r"$\Delta \theta$ from jet axis [deg]")
-ax3.set_ylabel(r"$dE/d\Omega(\theta)$ or $\epsilon(t)$ [erg/ster]")
-ax3.grid(True)
-ax3.legend()
-
-# Show all plots at once
-plt.show()
+![image](C:/GRB paper images/Figure_3.png)
+![image](C:/GRB paper images/Figure_4.png)

@@ -2,7 +2,7 @@
 The GRB Jet Energy Model is a program that attempts to analyze the approximate energy levels of Gamma Ray Bursts (GRBs) during different time periods. We post our analysis of the numerical simulation as well as our research in order to support further development of the jet energy & energy per solid angle models in the future.
 
 ## Related Paper
-The research paper is linked here: [The Possible Energy Distributions Of Gamma Ray Burst Jets](https://storage.googleapis.com/mtc-api-production-bucket/evidence/712/23680/52020/file/f15aee25e576f13561ec1230b178d0bb/The_Possible_Energy_Distributions_Of_GRB_Jets.pdf)
+The research paper is linked here: [The Possible Energy Distributions Of Gamma Ray Burst Jets](https://drive.google.com/file/d/1iCz7ZzT10QCUDKIyhIMsKr4ffijnPqSB/view?usp=sharing)
 
 ## Prerequisites
 - Python 3.10+
